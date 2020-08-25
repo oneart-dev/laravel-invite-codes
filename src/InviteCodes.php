@@ -65,7 +65,7 @@ class InviteCodes implements InviteCodesContract
      * @throws UserLoggedOutException
      * @throws InviteAlreadyRedeemedException
      */
-    public function redeem(string $code): Invite
+    public function redeem(string $code, $save = true): Invite
     {
         try {
             $model = app(config('invite-codes.models.invite_model', Invite::class));
@@ -75,11 +75,14 @@ class InviteCodes implements InviteCodesContract
         }
 
         if ($this->inviteCanBeRedeemed($invite)) {
-            /** @var Invite $invite */
-            $invite->increment('uses', 1);
-            $invite->save();
+            if($save)
+            {
+                /** @var Invite $invite */
+                $invite->increment('uses', 1);
+                $invite->save();
+            }
 
-            if ($this->shouldDispatchEvents()) {
+            if ($this->shouldDispatchEvents() && $save) {
                 event(new InviteRedeemedEvent($invite));
             }
 
