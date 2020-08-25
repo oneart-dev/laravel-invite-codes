@@ -219,7 +219,7 @@ class InviteCodes implements InviteCodesContract
      * @throws UserLoggedOutException
      * @throws InviteAlreadyRedeemedException
      */
-    private function inviteCanBeRedeemed(Invite $invite, string $email = null): bool
+    public function inviteCanBeRedeemed(Invite $invite, string $email = null): bool
     {
         if ($invite->hasRestrictedUsage() && ! Auth::check()) {
             throw new UserLoggedOutException('You must be logged in to use this invite code.', Response::HTTP_FORBIDDEN);
